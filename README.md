@@ -11,18 +11,24 @@ create a token in hetzner console.
 
 ## Usage
 
-To create a kubernetes with one master and 2 nodes
+To create a kubernetes with one master and 2 nodes (machine type cx11)
 
 ```
 $ terraform init
 $ terraform apply -var="hcloud_token=token" -var="node_count=2"
 ```
 
-you can create kubernetes with one node by update the node_count variable to 1
+you can create kubernetes with one or multiple node by update the node_count variable in terraform command
 
 ```
 $ terraform init
 $ terraform apply -var="hcloud_token=token" -var="node_count=1"
+```
+
+you can update the machine type for both the master and the node :
+
+```
+$ terraform apply -var="hcloud_token=token"  -var="master_type=cx11"-var="node_type=cx21" 
 ```
 
 
