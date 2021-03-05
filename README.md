@@ -97,3 +97,14 @@ $ terraform apply -var="hcloud_token=token" -var="node_count=1"
    ```
    
 more info : [Container Storage Interface driver for Hetzner Cloud](https://github.com/hetznercloud/csi-driver)
+
+
+## Cloud controller manager 
+
+Now that we have access to the cluster, we need to install the Hetzner cloud controller manager so that we can use load balancers and run workloads on the nodes:
+
+```
+kubectl -n kube-system create secret generic hcloud --from-literal=token=<the Hetzner project token you created earlier> --from-literal=network=default
+
+kubectl apply -f  https://raw.githubusercontent.com/hetznercloud/hcloud-cloud-controller-manager/master/deploy/ccm-networks.yaml
+```
