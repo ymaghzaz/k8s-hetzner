@@ -1,3 +1,21 @@
+resource "null_resource" "kubernetes_node_join_master" {
+  count = var.node_count
+  provisioner "local-exec" {
+    command = "bash scripts/node_join_k8s.sh"
+    environment = {
+      SSH_PRIVATE_KEY = var.ssh_private_key
+      SSH_USERNAME    = "root"
+      SSH_HOST_MASTER =  hcloud_server.master.ipv4_address
+      NODE_ID =  count.index
+      TARGET          = "${path.module}/secrets/"
+    }
+  }
+
+  depends_on = [
+    hcloud_server.master
+  ]
+}
+
 
 resource "hcloud_server" "node" {
   count = var.node_count
@@ -21,7 +39,7 @@ resource "hcloud_server" "node" {
   }
 
   provisioner "file" {
-    source      = "secrets/kubeadm_join"
+    source      = "secrets/kubeadm_join_${count.index}"
     destination = "/tmp/kubeadm_join"
   }
 
@@ -35,8 +53,9 @@ resource "hcloud_server" "node" {
   }
 
   depends_on = [
-    hcloud_server.master,
-    null_resource.kubernetes_join_token
+    null_resource.kubernetes_node_join_master
   ]
-
 }
+
+
+

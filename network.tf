@@ -9,3 +9,4 @@ resource "hcloud_network_subnet" "kub_network_subnet" {
   network_zone = "eu-central"
   ip_range     = "192.168.0.0/24"
 }
+

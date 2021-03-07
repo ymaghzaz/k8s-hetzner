@@ -38,20 +38,3 @@ resource "hcloud_server" "master" {
     hcloud_network_subnet.kub_network_subnet
   ]
 }
-
-resource "null_resource" "kubernetes_join_token" {
-
-  provisioner "local-exec" {
-    command = "bash scripts/copy-kubeadm-token.sh"
-    environment = {
-      SSH_PRIVATE_KEY = var.ssh_private_key
-      SSH_USERNAME    = "root"
-      SSH_HOST        =  hcloud_server.master.ipv4_address
-      TARGET          = "${path.module}/secrets/"
-    }
-  }
-
-  depends_on = [
-    hcloud_server.master
-  ]
-}
